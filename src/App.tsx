@@ -6,6 +6,7 @@ import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import Pyramid from "./components/Pyramid/Pyramid";
 import Sidebar from "./components/Sidebar/Sidebar";
 import GenerateButton from "./components/GenerateButton/GenerateButton";
+import { canAddNoteToLevel } from "./utils/pyramidUtils";
 
 function App() {
   const [pyramidState, setPyramidState] = useState<PyramidState>({
@@ -21,6 +22,7 @@ function App() {
     setActiveNote(note);
   };
 
+  // In your handleDragEnd function in App.tsx
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveNote(null);
@@ -31,6 +33,7 @@ function App() {
     const targetLevel = over.data.current?.level as "top" | "middle" | "base";
 
     if (targetLevel && note) {
+      // Check if note already exists
       const noteExists = pyramidState[targetLevel].some(
         (existingNote) => existingNote.id === note.id
       );
@@ -39,6 +42,18 @@ function App() {
         console.log(`Note ${note.name} already exists in ${targetLevel}`);
         return;
       }
+
+      // Check if level has reached maximum capacity
+      const currentLevelNotes = pyramidState[targetLevel];
+      if (!canAddNoteToLevel(targetLevel, currentLevelNotes)) {
+        console.log(
+          `Cannot add more notes to ${targetLevel} level - maximum reached`
+        );
+        // You could show a toast notification here
+        return;
+      }
+
+      // Add the note
       setPyramidState((prev) => ({
         ...prev,
         [targetLevel]: [...prev[targetLevel], note],

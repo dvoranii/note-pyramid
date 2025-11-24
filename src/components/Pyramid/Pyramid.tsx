@@ -16,7 +16,6 @@ const Pyramid = ({ pyramidState, onRemoveNote }: PyramidProps) => {
           label="Top"
           notes={pyramidState.top}
           onRemoveNote={onRemoveNote}
-          maxSlots={4}
         />
       </LevelWrapper>
 
@@ -26,7 +25,6 @@ const Pyramid = ({ pyramidState, onRemoveNote }: PyramidProps) => {
           label="Middle"
           notes={pyramidState.middle}
           onRemoveNote={onRemoveNote}
-          maxSlots={6}
         />
       </LevelWrapper>
 
@@ -36,7 +34,6 @@ const Pyramid = ({ pyramidState, onRemoveNote }: PyramidProps) => {
           label="Base"
           notes={pyramidState.base}
           onRemoveNote={onRemoveNote}
-          maxSlots={4}
         />
       </LevelWrapper>
     </PyramidContainer>
