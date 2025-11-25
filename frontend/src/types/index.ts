@@ -24,3 +24,20 @@ export interface AnalysisResult {
   analysis: string;
   timestamp: string;
 }
+
+export interface StructuredAnalysis {
+  overallProfile: string;
+  openingExperience: string;
+  heartDevelopment: string;
+  foundationEvolution: string;
+  marketContext: string;
+  wearability: string;
+  considerations: string;
+  timestamp: string;
+}
+
+export interface AnalysisResult {
+  analysis: string;
+  structuredAnalysis?: StructuredAnalysis;
+  timestamp: string;
+}
