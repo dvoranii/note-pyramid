@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import { GeminiService } from "../services/geminiService.js";
+
+const geminiService = new GeminiService();
 
 export const analyzeFragrance = async (req: Request, res: Response) => {
   try {
     console.log("📥 Received fragrance analysis request:");
-    console.log("Request body:", JSON.stringify(req.body, null, 2));
 
     const { composition, analysisLevel } = req.body;
 
@@ -14,41 +16,57 @@ export const analyzeFragrance = async (req: Request, res: Response) => {
     console.log("- Base notes:", composition?.base?.length || 0, "notes");
     console.log("- Analysis level:", analysisLevel);
 
-    if (composition?.top) {
-      console.log(
-        "🔝 Top notes:",
-        composition.top.map((n: any) => n.name)
-      );
-    }
-    if (composition?.middle) {
-      console.log(
-        "💖 Middle notes:",
-        composition.middle.map((n: any) => n.name)
-      );
-    }
-    if (composition?.base) {
-      console.log(
-        "📦 Base notes:",
-        composition.base.map((n: any) => n.name)
-      );
+    // Validate request
+    if (
+      !composition ||
+      !composition.top ||
+      !composition.middle ||
+      !composition.base
+    ) {
+      return res.status(400).json({
+        error:
+          "Invalid composition structure - must include top, middle, and base notes",
+        timestamp: new Date().toISOString(),
+      });
     }
 
-    // Send back a simple success response for now
+    if (analysisLevel !== "beginner" && analysisLevel !== "expert") {
+      return res.status(400).json({
+        error: 'Analysis level must be either "beginner" or "expert"',
+        timestamp: new Date().toISOString(),
+      });
+    }
+
+    // Generate AI analysis
+    console.log("🚀 Generating AI analysis...");
+    const analysis = await geminiService.analyzeFragrance(
+      composition,
+      analysisLevel
+    );
+
+    console.log("✅ Analysis generated successfully");
+
     res.json({
-      analysis:
-        "Backend received your data successfully! Gemini integration coming soon.",
+      analysis,
       timestamp: new Date().toISOString(),
-      receivedData: {
-        topNotes: composition?.top?.map((n: any) => n.name) || [],
-        middleNotes: composition?.middle?.map((n: any) => n.name) || [],
-        baseNotes: composition?.base?.map((n: any) => n.name) || [],
-        analysisLevel,
-      },
     });
   } catch (error) {
     console.error("❌ Error in analyzeFragrance:", error);
+
+    // Provide more specific error messages
+    let errorMessage = "Internal server error";
+    if (error instanceof Error) {
+      if (error.message.includes("API key")) {
+        errorMessage = "Gemini API configuration error - check your API key";
+      } else if (error.message.includes("Failed to generate")) {
+        errorMessage = "AI service temporarily unavailable - please try again";
+      } else {
+        errorMessage = error.message;
+      }
+    }
+
     res.status(500).json({
-      error: "Internal server error",
+      error: errorMessage,
       timestamp: new Date().toISOString(),
     });
   }

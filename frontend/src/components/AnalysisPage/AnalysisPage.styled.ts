@@ -9,6 +9,7 @@ export const AnalysisPageContainer = styled.div`
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  overflow-y: scroll;
 `;
 
 export const LevelSelector = styled.div`
