@@ -1,5 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
-import type { Note } from "../../types";
+import type { Note } from "../../../types";
 import { Card, NoteImage, NoteName } from "./NoteCard.styled";
 
 interface NoteCardProps {

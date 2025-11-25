@@ -8,6 +8,13 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+
+  @media screen and (max-width: 1024px) {
+    width: 14rem;
+  }
+  @media screen and (max-width: 840px) {
+    width: 10rem;
+  }
 `;
 
 export const SearchSection = styled.div`
@@ -79,6 +86,14 @@ export const NotesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 840px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
 export const LoadMoreButton = styled.button`

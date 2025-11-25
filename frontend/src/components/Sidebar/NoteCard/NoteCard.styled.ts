@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "../../theme/colors";
+import { colors } from "../../../theme/colors";
 
 export const Card = styled.div<{ $isDragging: boolean }>`
   background-color: ${colors.white};

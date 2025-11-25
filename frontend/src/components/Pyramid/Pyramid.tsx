@@ -1,4 +1,4 @@
-import PyramidLevel from "./PyramidLevel";
+import PyramidLevel from "./PyramidLevel/PyramidLevel";
 import type { PyramidState } from "../../types";
 import { PyramidContainer, LevelWrapper } from "./Pyramid.styled";
 

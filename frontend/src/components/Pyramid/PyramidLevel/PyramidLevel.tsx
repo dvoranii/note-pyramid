@@ -1,16 +1,16 @@
 import { useDroppable } from "@dnd-kit/core";
 import { X } from "lucide-react";
-import type { Note } from "../../types";
-import pyramidTopImg from "../../assets/top-340x289.png";
-import pyramidMiddleImg from "../../assets/mid-606x222.png";
-import pyramidBaseImg from "../../assets/base-875x221.png";
+import type { Note } from "../../../types";
+import pyramidTopImg from "../../../assets/top-340x289.png";
+import pyramidMiddleImg from "../../../assets/mid-606x222.png";
+import pyramidBaseImg from "../../../assets/base-875x221.png";
 import {
   getPlaceholderCount,
   getGridColumns,
   getRowInfo,
   getGridWidth,
   getGridGap,
-} from "../../utils/pyramidUtils";
+} from "../../../utils/pyramidUtils";
 import {
   LevelContainer,
   LevelBox,
@@ -22,7 +22,7 @@ import {
   NoteImageInSlot,
   LevelHeader,
 } from "./PyramidLevel.styled";
-import { getMaxNotesForLevel } from "../../utils/pyramidUtils";
+import { getMaxNotesForLevel } from "../../../utils/pyramidUtils";
 
 interface PyramidLevelProps {
   level: "top" | "middle" | "base";

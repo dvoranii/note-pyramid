@@ -1,0 +1,13 @@
+import { createContext } from "react";
+import type { PyramidState, Note } from "../types";
+
+export interface PyramidContextType {
+  pyramidState: PyramidState;
+  addNoteToLevel: (level: keyof PyramidState, note: Note) => void;
+  removeNoteFromLevel: (level: keyof PyramidState, noteId: string) => void;
+  canGenerate: boolean;
+}
+
+export const PyramidContext = createContext<PyramidContextType | undefined>(
+  undefined
+);

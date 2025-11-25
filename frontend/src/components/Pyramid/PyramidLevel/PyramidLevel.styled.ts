@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { colors } from "../../theme/colors";
+import { colors } from "../../../theme/colors";
 import {
   getLevelAspectRatio,
   getLevelWidthPercentage,
@@ -7,7 +7,7 @@ import {
   getSlotScale,
   getSlotBackgroundColor,
   getSlotBorder,
-} from "../../styles/pyramidStyleUtils";
+} from "../../../styles/pyramidStyleUtils";
 // import { getHeaderPosition } from "../../utils/pyramidUtils";
 
 export const LevelContainer = styled.div`

@@ -1,8 +1,7 @@
 import * as S from "./Sidebar.styled";
 import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
-import NoteCard from "./NoteCard";
-// import { NoteCategory } from "../../types";
+import NoteCard from "./NoteCard/NoteCard";
 import notesData from "../../data/fragrance_notes_with_images.json";
 
 const Sidebar = () => {

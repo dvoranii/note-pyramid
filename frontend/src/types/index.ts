@@ -19,3 +19,8 @@ export interface PyramidState {
 }
 
 export type PyramidLevel = "top" | "middle" | "base";
+
+export interface AnalysisResult {
+  analysis: string;
+  timestamp: string;
+}
