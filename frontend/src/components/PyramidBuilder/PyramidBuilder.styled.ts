@@ -5,7 +5,6 @@ export const PyramidBuilderContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
   width: 100%;
 `;
 
@@ -31,4 +30,18 @@ export const DragOverlayCard = styled.div`
     font-weight: 500;
     color: ${colors.brown[800]};
   }
+`;
+
+export const ControlSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+`;
+
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 `;

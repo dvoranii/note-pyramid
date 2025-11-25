@@ -22,6 +22,18 @@ export const usePyramidState = () => {
     }));
   };
 
+  const clearPyramid = () => {
+    setPyramidState({
+      top: [],
+      middle: [],
+      base: [],
+    });
+  };
+
+  const loadPyramidState = (newState: PyramidState) => {
+    setPyramidState(newState);
+  };
+
   const canGenerate =
     pyramidState.top.length > 0 &&
     pyramidState.middle.length > 0 &&
@@ -31,6 +43,8 @@ export const usePyramidState = () => {
     pyramidState,
     addNoteToLevel,
     removeNoteFromLevel,
+    clearPyramid,
+    loadPyramidState,
     canGenerate,
   };
 };

@@ -17,10 +17,32 @@ export const ContentWrapper = styled.div<{ $hasResult: boolean }>`
   align-items: center;
   gap: 2rem;
   width: 100%;
-  height: 100%;
+  height: 80%;
 
   justify-content: ${(props) => (props.$hasResult ? "flex-start" : "center")};
   padding: 2rem 0;
+`;
+
+export const NavigationSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+`;
+
+export const BackButton = styled.button`
+  padding: 0.5rem 1rem;
+  background-color: ${colors.beige[300]};
+  color: ${colors.brown[800]};
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+
+  &:hover {
+    background-color: ${colors.beige[400]};
+  }
 `;
 
 // In AnalysisPage.styled.ts
@@ -60,37 +82,6 @@ export const HeaderSection = styled.div`
   width: 100%;
   text-align: center;
   flex-shrink: 0; /* Prevent shrinking when content is long */
-`;
-
-export const LevelSelector = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-
-  label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    color: ${colors.brown[700]};
-  }
-
-  select {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid ${colors.beige[300]};
-    background-color: ${colors.white};
-    color: ${colors.brown[800]};
-    outline: none;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:focus {
-      box-shadow: 0 0 0 2px ${colors.brown[600]};
-    }
-  }
 `;
 
 export const AnalyzeButton = styled.button`
@@ -136,7 +127,23 @@ export const AnalysisResult = styled.div`
   border-radius: 1rem;
   border: 1px solid ${colors.beige[300]};
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  overflow-y: scroll;
+  height: 100%;
+
+  /* Fade-in animation - plays every time component mounts */
+  animation: fadeInUp 0.5s ease-out forwards;
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 export const AnalysisContent = styled.div`

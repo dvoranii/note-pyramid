@@ -7,11 +7,18 @@ export const LayoutContainer = styled.div`
   background-color: ${colors.beige[100]};
 `;
 
-export const MainContent = styled.div`
+export const MainContent = styled.div<{ $fullWidth?: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+
+  ${(props) =>
+    props.$fullWidth &&
+    `
+    margin-left: 0;
+    width: 100%;
+  `}
 `;

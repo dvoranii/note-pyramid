@@ -5,6 +5,8 @@ export interface PyramidContextType {
   pyramidState: PyramidState;
   addNoteToLevel: (level: keyof PyramidState, note: Note) => void;
   removeNoteFromLevel: (level: keyof PyramidState, noteId: string) => void;
+  clearPyramid: () => void;
+  loadPyramidState: (newState: PyramidState) => void;
   canGenerate: boolean;
 }
 
