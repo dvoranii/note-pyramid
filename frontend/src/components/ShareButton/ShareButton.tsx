@@ -1,9 +1,10 @@
+import * as S from "./ShareButton.styled";
 import { useState } from "react";
 import { Share2, Check } from "lucide-react";
 import { generateAnalysisShareUrl } from "../../utils/pyramidEncoding";
 import { usePyramid } from "../../context/usePyramid";
 import { useLocation } from "react-router-dom";
-import * as S from "./ShareButton.styled";
+import { shortenUrlWithTinyUrl } from "../../utils/urlShortener";
 
 interface ShareButtonProps {
   analysisResult?: {
@@ -16,33 +17,53 @@ export const ShareButton = ({ analysisResult }: ShareButtonProps) => {
   const { pyramidState } = usePyramid();
   const location = useLocation();
   const [copied, setCopied] = useState(false);
+  const [isShortening, setIsShortening] = useState(false);
 
   const handleShare = async () => {
     if (!analysisResult) return;
 
-    const analysisLevel = location.state?.analysisLevel || "beginner";
+    setIsShortening(true);
 
-    const shareableState = {
-      composition: pyramidState,
-      analysisLevel: analysisLevel as "beginner" | "expert",
-      analysis: analysisResult.analysis,
-      timestamp: analysisResult.timestamp,
-    };
+    try {
+      const analysisLevel = location.state?.analysisLevel || "beginner";
 
-    const url = generateAnalysisShareUrl(shareableState);
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+      const shareableState = {
+        composition: pyramidState,
+        analysisLevel: analysisLevel as "beginner" | "expert",
+        analysis: analysisResult.analysis,
+        timestamp: analysisResult.timestamp,
+      };
+
+      const longUrl = generateAnalysisShareUrl(shareableState);
+
+      const shortUrl = await shortenUrlWithTinyUrl(longUrl);
+
+      await navigator.clipboard.writeText(shortUrl);
+
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Failed to share:", error);
+      alert("Failed to create share link. Please try again.");
+    } finally {
+      setIsShortening(false);
+    }
   };
 
-  // Only show share button when we have analysis results
   if (!analysisResult) {
     return null;
   }
 
   return (
-    <S.ShareButton onClick={handleShare} disabled={!analysisResult}>
-      {copied ? (
+    <S.ShareButton
+      onClick={handleShare}
+      disabled={!analysisResult || isShortening}
+    >
+      {isShortening ? (
+        <>
+          <Share2 size={16} className="animate-pulse" /> Shortening...
+        </>
+      ) : copied ? (
         <>
           <Check size={16} /> Copied!
         </>
