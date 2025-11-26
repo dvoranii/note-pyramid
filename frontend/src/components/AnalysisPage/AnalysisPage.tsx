@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ShareButton } from "../ShareButton/ShareButton";
+import { NoteBreakdown } from "../NoteBreakdown/NoteBreakdown";
 
 const AnalysisPage = () => {
   const { pyramidState } = usePyramid();
@@ -29,38 +30,48 @@ const AnalysisPage = () => {
     }
   }, []);
 
-  const hasResult = !!result;
+  // const hasResult = !!result;
 
   return (
     <S.AnalysisPageContainer>
-      <S.ContentWrapper $hasResult={hasResult}>
-        <S.HeaderSection>
-          <S.NavigationSection>
-            <S.BackButton onClick={handleBackToPyramid}>
-              ← Back to Pyramid
-            </S.BackButton>
-            <ShareButton />
-          </S.NavigationSection>
-          <h1>Fragrance Analysis</h1>
+      <S.NavigationSection>
+        <S.BackButton onClick={handleBackToPyramid}>
+          ← Back to Pyramid
+        </S.BackButton>
+        <ShareButton />
+      </S.NavigationSection>
 
-          {isLoading && (
-            <S.LoadingState>
-              Generating your fragrance analysis...
-            </S.LoadingState>
+      <S.MainContent>
+        {/* Left Sidebar - Note Breakdown */}
+        <S.Sidebar>
+          <S.SidebarTitle>Composition</S.SidebarTitle>
+          <NoteBreakdown pyramidState={pyramidState} />
+        </S.Sidebar>
+
+        {/* Main Analysis Area */}
+        <S.AnalysisSection>
+          <S.HeaderSection>
+            <h1>Fragrance Analysis</h1>
+
+            {isLoading && (
+              <S.LoadingState>
+                Generating your fragrance analysis...
+              </S.LoadingState>
+            )}
+          </S.HeaderSection>
+
+          {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
+
+          {result && (
+            <S.AnalysisResult>
+              <h2>Analysis Result</h2>
+              <S.AnalysisContent>
+                <ReactMarkdown>{result.analysis}</ReactMarkdown>
+              </S.AnalysisContent>
+            </S.AnalysisResult>
           )}
-        </S.HeaderSection>
-
-        {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
-
-        {result && (
-          <S.AnalysisResult>
-            <h2>Analysis Result</h2>
-            <S.AnalysisContent>
-              <ReactMarkdown>{result.analysis}</ReactMarkdown>
-            </S.AnalysisContent>
-          </S.AnalysisResult>
-        )}
-      </S.ContentWrapper>
+        </S.AnalysisSection>
+      </S.MainContent>
     </S.AnalysisPageContainer>
   );
 };
