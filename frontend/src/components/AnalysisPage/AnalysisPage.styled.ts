@@ -73,10 +73,12 @@ export const AnalysisSection = styled.div`
 export const HeaderSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
   flex-shrink: 0;
+  border-bottom: 1px solid lightgrey;
+  padding-bottom: 2rem;
 
   h1 {
     color: ${colors.brown[900]};
