@@ -1,36 +1,63 @@
 import * as S from "./AnalysisPage.styled";
 import { usePyramid } from "../../context/usePyramid";
 import { useFragranceAnalysis } from "../../hooks/useFragranceAnalysis";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ShareButton } from "../ShareButton/ShareButton";
 import { NoteBreakdown } from "../NoteBreakdown/NoteBreakdown";
+import { decodeShareableAnalysis } from "../../utils/pyramidEncoding";
+import type { ShareableAnalysis } from "../../utils/pyramidEncoding";
 
 const AnalysisPage = () => {
-  const { pyramidState } = usePyramid();
+  const { pyramidState, loadPyramidState } = usePyramid();
   const { isLoading, error, result, analyzeFragrance } = useFragranceAnalysis();
   const location = useLocation();
   const navigate = useNavigate();
 
+  const sharedData = useMemo<ShareableAnalysis | null>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shareEncoded = params.get("share");
+
+    if (shareEncoded) {
+      const decoded = decodeShareableAnalysis(shareEncoded);
+      if (decoded) {
+        window.history.replaceState({}, "", window.location.pathname);
+        return decoded;
+      }
+    }
+    return null;
+  }, []);
+
   const analysisLevel =
-    (location.state?.analysisLevel as "beginner" | "expert") || "beginner";
+    sharedData?.analysisLevel ||
+    (location.state?.analysisLevel as "beginner" | "expert") ||
+    "beginner";
 
   const handleBackToPyramid = () => {
     navigate("/");
   };
 
   useEffect(() => {
-    if (
+    if (sharedData) {
+      loadPyramidState(sharedData.composition);
+    } else if (
       pyramidState.top.length > 0 &&
       pyramidState.middle.length > 0 &&
       pyramidState.base.length > 0
     ) {
       analyzeFragrance(pyramidState, analysisLevel);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const hasResult = !!result;
+  const displayAnalysis = sharedData?.analysis || result?.analysis;
+  const displayTimestamp = sharedData?.timestamp || result?.timestamp;
+
+  const analysisResult =
+    displayAnalysis && displayTimestamp
+      ? { analysis: displayAnalysis, timestamp: displayTimestamp }
+      : undefined;
 
   return (
     <S.AnalysisPageContainer>
@@ -38,17 +65,15 @@ const AnalysisPage = () => {
         <S.BackButton onClick={handleBackToPyramid}>
           ← Back to Pyramid
         </S.BackButton>
-        <ShareButton />
+        <ShareButton analysisResult={analysisResult} />
       </S.NavigationSection>
 
       <S.MainContent>
-        {/* Left Sidebar - Note Breakdown */}
         <S.Sidebar>
           <S.SidebarTitle>Composition</S.SidebarTitle>
           <NoteBreakdown pyramidState={pyramidState} />
         </S.Sidebar>
 
-        {/* Main Analysis Area */}
         <S.AnalysisSection>
           <S.HeaderSection>
             <h1>Fragrance Analysis</h1>
@@ -62,11 +87,16 @@ const AnalysisPage = () => {
 
           {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-          {result && (
+          {displayAnalysis && (
             <S.AnalysisResult>
               <h2>Analysis Result</h2>
+              {displayTimestamp && (
+                <S.Timestamp>
+                  Generated: {new Date(displayTimestamp).toLocaleString()}
+                </S.Timestamp>
+              )}
               <S.AnalysisContent>
-                <ReactMarkdown>{result.analysis}</ReactMarkdown>
+                <ReactMarkdown>{displayAnalysis}</ReactMarkdown>
               </S.AnalysisContent>
             </S.AnalysisResult>
           )}

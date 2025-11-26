@@ -1,22 +1,30 @@
 import LZString from "lz-string";
-import type { PyramidState } from "../types/index";
+import type { PyramidState } from "../types";
 
-export const encodePyramidState = (state: PyramidState): string => {
+export interface ShareableAnalysis {
+  composition: PyramidState;
+  analysisLevel: "beginner" | "expert";
+  analysis: string;
+  timestamp: string;
+}
+
+export const encodeShareableAnalysis = (state: ShareableAnalysis): string => {
   const json = JSON.stringify(state);
   return LZString.compressToEncodedURIComponent(json);
 };
 
-export const decodePyramidState = (encoded: string): PyramidState | null => {
+export const decodeShareableAnalysis = (
+  encoded: string
+): ShareableAnalysis | null => {
   try {
     const json = LZString.decompressFromEncodedURIComponent(encoded);
-    if (!json) return null;
-    return JSON.parse(json);
+    return json ? JSON.parse(json) : null;
   } catch {
     return null;
   }
 };
 
-export const generateShareableUrl = (state: PyramidState): string => {
-  const encoded = encodePyramidState(state);
-  return `${window.location.origin}${window.location.pathname}?composition=${encoded}`;
+export const generateAnalysisShareUrl = (state: ShareableAnalysis): string => {
+  const encoded = encodeShareableAnalysis(state);
+  return `${window.location.origin}/analysis?share=${encoded}`;
 };
