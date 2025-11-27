@@ -25,7 +25,14 @@ export const Title = styled.h1`
 
 export const HeaderActions = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 1rem;
+`;
+
+export const SaveButtonsWrapper = styled.div`
+  display: flex;
+  gap: 1.2rem;
 `;
 
 export const SaveNotesButton = styled.button`
@@ -104,4 +111,21 @@ export const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
   align-items: center;
+`;
+
+export const ClearButton = styled.button`
+  background-color: #d30000;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 200ms ease;
+
+  &:hover {
+    background-color: #b80f0a;
+    transform: translateY(-1px);
+  }
 `;

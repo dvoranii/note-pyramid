@@ -14,8 +14,13 @@ import {
 import type { SavedComposition } from "../../utils/compositionStorage";
 
 const PyramidBuilder = () => {
-  const { pyramidState, removeNoteFromLevel, canGenerate, loadPyramidState } =
-    usePyramid();
+  const {
+    pyramidState,
+    removeNoteFromLevel,
+    canGenerate,
+    loadPyramidState,
+    clearPyramid,
+  } = usePyramid();
   const navigate = useNavigate();
   const [analysisLevel, setAnalysisLevel] = useState<"beginner" | "expert">(
     "beginner"
@@ -27,6 +32,11 @@ const PyramidBuilder = () => {
     SavedComposition[]
   >(() => getCompositions());
 
+  const hasNotes =
+    pyramidState.top.length > 0 ||
+    pyramidState.middle.length > 0 ||
+    pyramidState.base.length > 0;
+
   const handleGenerate = () => {
     navigate("/analysis", {
       state: { analysisLevel },
@@ -35,6 +45,16 @@ const PyramidBuilder = () => {
 
   const handleSaveClick = () => {
     setIsSaveModalOpen(true);
+  };
+
+  const handleClearPyramid = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all notes from the pyramid?"
+      )
+    ) {
+      clearPyramid();
+    }
   };
 
   const handleSaveComposition = (name: string) => {
@@ -49,7 +69,6 @@ const PyramidBuilder = () => {
   };
 
   const handleDeleteComposition = (id: string) => {
-    // Optimistic update - remove from UI immediately
     setSavedCompositions((prev) => prev.filter((comp) => comp.id !== id));
   };
 
@@ -61,42 +80,24 @@ const PyramidBuilder = () => {
     setSavedCompositions(getCompositions());
   };
 
-  const generateSuggestedName = (): string => {
-    const topNotes = pyramidState.top
-      .slice(0, 2)
-      .map((n) => n.name)
-      .join(" + ");
-    const middleNotes = pyramidState.middle
-      .slice(0, 2)
-      .map((n) => n.name)
-      .join(" + ");
-    const baseNotes = pyramidState.base
-      .slice(0, 2)
-      .map((n) => n.name)
-      .join(" + ");
-
-    if (topNotes && middleNotes && baseNotes) {
-      return `${topNotes} / ${middleNotes} / ${baseNotes}`;
-    }
-    return "My Fragrance Composition";
-  };
-
   return (
     <>
       <S.PyramidBuilderContainer>
         <S.HeaderSection>
           <S.HeaderActions>
-            <S.SaveNotesButton
-              onClick={handleSaveClick}
-              disabled={!canGenerate}
-            >
-              💾 Save Notes
-            </S.SaveNotesButton>
-            <S.SavedNotesButton
-              onClick={() => setIsSavedCompositionsOpen(true)}
-            >
-              📚 Saved Notes
-            </S.SavedNotesButton>
+            <S.SaveButtonsWrapper>
+              <S.SaveNotesButton
+                onClick={handleSaveClick}
+                disabled={!canGenerate}
+              >
+                💾 Save Notes
+              </S.SaveNotesButton>
+              <S.SavedNotesButton
+                onClick={() => setIsSavedCompositionsOpen(true)}
+              >
+                📚 Saved Notes
+              </S.SavedNotesButton>
+            </S.SaveButtonsWrapper>
           </S.HeaderActions>
         </S.HeaderSection>
         <Pyramid
@@ -111,13 +112,17 @@ const PyramidBuilder = () => {
             analysisLevel={analysisLevel}
             onLevelChange={setAnalysisLevel}
           />
+          {hasNotes && (
+            <S.ClearButton onClick={handleClearPyramid}>
+              🗑️ Clear Notes
+            </S.ClearButton>
+          )}
         </S.ControlSection>
       </S.PyramidBuilderContainer>
       <SaveModal
         isOpen={isSaveModalOpen}
         onClose={() => setIsSaveModalOpen(false)}
         onSave={handleSaveComposition}
-        suggestedName={generateSuggestedName()}
       />
       <SavedCompositions
         isOpen={isSavedCompositionsOpen}
