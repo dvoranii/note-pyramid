@@ -1,5 +1,5 @@
 import * as S from "./PyramidBuilder.styled";
-import { usePyramid } from "../../context/usePyramid";
+import { usePyramid } from "../../context/PyramidContext/usePyramid";
 import Pyramid from "../Pyramid/Pyramid";
 import GenerateButton from "../GenerateButton/GenerateButton";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import {
   getCompositions,
 } from "../../utils/compositionStorage";
 import type { SavedComposition } from "../../utils/compositionStorage";
+import { useKeyboardNavigation } from "../../context/KeyboardNavigationContext/useKeyboardNavigation";
 
 const PyramidBuilder = () => {
   const {
@@ -31,6 +32,8 @@ const PyramidBuilder = () => {
   const [savedCompositions, setSavedCompositions] = useState<
     SavedComposition[]
   >(() => getCompositions());
+  const { selectedLevel, pyramidMode, highlightedPyramidNoteIndex } =
+    useKeyboardNavigation();
 
   const hasNotes =
     pyramidState.top.length > 0 ||
@@ -103,6 +106,9 @@ const PyramidBuilder = () => {
         <Pyramid
           pyramidState={pyramidState}
           onRemoveNote={removeNoteFromLevel}
+          selectedLevel={selectedLevel}
+          pyramidMode={pyramidMode}
+          highlightedPyramidNoteIndex={highlightedPyramidNoteIndex}
         />
         <S.ControlSection>
           <S.ButtonGroup>

@@ -1,5 +1,5 @@
 import * as S from "./AnalysisPage.styled";
-import { usePyramid } from "../../context/usePyramid";
+import { usePyramid } from "../../context/PyramidContext/usePyramid";
 import { useFragranceAnalysis } from "../../hooks/useFragranceAnalysis";
 import { useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";

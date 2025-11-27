@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { usePyramidState } from "../hooks/usePyramidState";
+import { usePyramidState } from "../../hooks/usePyramidState";
 import { PyramidContext } from "./PyramidContext";
 
 export const PyramidProvider: React.FC<{ children: ReactNode }> = ({

@@ -1,24 +1,31 @@
-import { PyramidProvider } from "./context/PyramidProvider";
+import { PyramidProvider } from "./context/PyramidContext/PyramidProvider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PyramidBuilder from "./components/PyramidBuilder/PyramidBuilder";
 import AnalysisPage from "./components/AnalysisPage/AnalysisPage";
 import Layout from "./components/Layout/Layout";
 import { DndProvider } from "./context/DndProvider";
+import { KeyboardNavigationProvider } from "./context/KeyboardNavigationContext/KeyboardNavigationProvider";
+import { GlobalKeydownHandler } from "./components/GlobalKeydownHandler/GlobalKeydownHandler";
+import { KeyboardNavIndicator } from "./components/KeyboardNavIndicator/KeyboardNavIndicator";
 
 function App() {
   return (
-    <PyramidProvider>
-      <Router>
-        <DndProvider>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<PyramidBuilder />} />
-              <Route path="/analysis" element={<AnalysisPage />} />
-            </Routes>
-          </Layout>
-        </DndProvider>
-      </Router>
-    </PyramidProvider>
+    <KeyboardNavigationProvider>
+      <PyramidProvider>
+        <Router>
+          <DndProvider>
+            <GlobalKeydownHandler />
+            <KeyboardNavIndicator />
+            <Layout>
+              <Routes>
+                <Route path="/" element={<PyramidBuilder />} />
+                <Route path="/analysis" element={<AnalysisPage />} />
+              </Routes>
+            </Layout>
+          </DndProvider>
+        </Router>
+      </PyramidProvider>
+    </KeyboardNavigationProvider>
   );
 }
 

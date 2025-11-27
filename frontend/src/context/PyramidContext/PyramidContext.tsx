@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { PyramidState, Note } from "../types";
+import type { PyramidState, Note } from "../../types";
 
 export interface PyramidContextType {
   pyramidState: PyramidState;

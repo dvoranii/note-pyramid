@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { usePyramid } from "./usePyramid";
+import { usePyramid } from "./PyramidContext/usePyramid";
 import { useDragAndDrop } from "../hooks/useDragAndDrop";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { useSensors, useSensor, PointerSensor } from "@dnd-kit/core";
 
 interface DndProviderProps {
   children: ReactNode;
@@ -13,6 +14,8 @@ export const DndProvider: React.FC<DndProviderProps> = ({ children }) => {
   const { activeNote, handleDragStart, handleDragEnd } =
     useDragAndDrop(addNoteToLevel);
 
+  const sensors = useSensors(useSensor(PointerSensor));
+
   const onDragStart = (event: DragStartEvent) => {
     handleDragStart(event);
   };
@@ -22,7 +25,11 @@ export const DndProvider: React.FC<DndProviderProps> = ({ children }) => {
   };
 
   return (
-    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+    <DndContext
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      sensors={sensors}
+    >
       {children}
       <DragOverlay>
         {activeNote && (

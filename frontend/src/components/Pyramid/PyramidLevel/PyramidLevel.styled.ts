@@ -100,6 +100,7 @@ export const Slot = styled.div<{
   $totalItems: number;
   $hasMultipleRows?: boolean;
   $hasExtraColumn?: boolean;
+  $isHighlighted?: boolean;
 }>`
   width: 70px;
   height: 70px;
@@ -119,6 +120,19 @@ export const Slot = styled.div<{
     )})`};
   transform-origin: center;
   transition: all 0.2s;
+
+  ${(props) =>
+    props.$isHighlighted &&
+    `
+    transform: scale(${getSlotScale(
+      props.$level,
+      props.$totalItems,
+      props.$hasMultipleRows,
+      props.$hasExtraColumn
+    )}) translateY(-4px);
+    box-shadow: 0px 0px 8px limegreen !important;
+    z-index: 1;
+  `}
 
   ${(props) =>
     props.$hasNote &&

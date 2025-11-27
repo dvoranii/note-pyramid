@@ -2,7 +2,7 @@ import * as S from "./ShareButton.styled";
 import { useState } from "react";
 import { Share2, Check } from "lucide-react";
 import { generateAnalysisShareUrl } from "../../utils/pyramidEncoding";
-import { usePyramid } from "../../context/usePyramid";
+import { usePyramid } from "../../context/PyramidContext/usePyramid";
 import { useLocation } from "react-router-dom";
 import { shortenUrlWithTinyUrl } from "../../utils/urlShortener";
 
