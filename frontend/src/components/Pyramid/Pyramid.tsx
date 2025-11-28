@@ -6,7 +6,7 @@ interface PyramidProps {
   pyramidState: PyramidState;
   onRemoveNote: (level: "top" | "middle" | "base", noteId: string) => void;
   selectedLevel?: "top" | "middle" | "base" | null;
-  pyramidMode?: "level-selection" | "level-navigation"; // NEW
+  pyramidMode?: "level-selection" | "level-navigation";
   highlightedPyramidNoteIndex?: number | null;
 }
 

@@ -22,8 +22,19 @@ export const SearchSection = styled.div`
   border-bottom: 1px solid ${colors.beige[300]};
 `;
 
-export const SearchWrapper = styled.div`
+export const SearchWrapper = styled.div<{ $isFocused?: boolean }>`
   position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+
+  ${(props) =>
+    props.$isFocused &&
+    `
+    outline: 2px solid ${colors.brown[900]};
+    outline-offset: 2px;
+  `}
 `;
 
 export const SearchInput = styled.input`
@@ -60,19 +71,26 @@ export const FilterSection = styled.div`
   border-bottom: 1px solid ${colors.beige[300]};
 `;
 
-export const Select = styled.select`
+export const Select = styled.select<{ $isFocused?: boolean }>`
   width: 100%;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid ${colors.beige[300]};
-  background-color: ${colors.white};
-  color: ${colors.brown[800]};
+  border-radius: 0.5rem;
+  background-color: white;
+  font-size: 0.9rem;
   outline: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+
+  ${(props) =>
+    props.$isFocused &&
+    `
+    outline: 2px solid ${colors.brown[900]};
+    outline-offset: 2px;
+  `}
 
   &:focus {
-    box-shadow: 0 0 0 2px ${colors.brown[600]};
+    border-color: ${colors.brown[600]};
   }
 `;
 

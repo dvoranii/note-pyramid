@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useKeyboardNavigation } from "../context/KeyboardNavigationContext/useKeyboardNavigation";
 import { usePyramid } from "../context/PyramidContext/usePyramid";
-import { useActivationHandlers } from "./hotkey-handlers/useActivationHandlers";
-import { usePyramidHandlers } from "./hotkey-handlers/usePyramidHandlers";
-import { useSidebarHandlers } from "./hotkey-handlers/useSidebarHandlers";
-import { useGlobalHandlers } from "./hotkey-handlers/useGlobalHandlers";
+import { useActivationHandlers } from "./keydown-handlers/useActivationHandlers";
+import { usePyramidHandlers } from "./keydown-handlers/usePyramidHandlers";
+import { useSidebarHandlers } from "./keydown-handlers/useSidebarHandlers";
+import { useGlobalHandlers } from "./keydown-handlers/useGlobalHandlers";
 
 export const useGlobalKeydown = () => {
   const navigation = useKeyboardNavigation();
@@ -12,7 +12,7 @@ export const useGlobalKeydown = () => {
 
   const activationHandlers = useActivationHandlers(navigation);
   const pyramidHandlers = usePyramidHandlers(navigation, pyramid);
-  const sidebarHandlers = useSidebarHandlers(navigation);
+  const sidebarHandlers = useSidebarHandlers(navigation, pyramid);
   const globalHandlers = useGlobalHandlers(navigation);
 
   useEffect(() => {
@@ -58,11 +58,30 @@ export const useGlobalKeydown = () => {
     globalHandlers,
   ]);
 };
-
 const shouldIgnoreEvent = (event: KeyboardEvent): boolean => {
-  return (
+  const isFocusedOnInput =
     event.target instanceof HTMLInputElement ||
     event.target instanceof HTMLTextAreaElement ||
-    event.target instanceof HTMLSelectElement
-  );
+    event.target instanceof HTMLSelectElement;
+
+  if (!isFocusedOnInput) return false;
+
+  // ALWAYS allow Escape to work in inputs/selects
+  if (event.key === "Escape") return false;
+
+  // For text inputs (search bar), ignore everything except Escape
+  if (
+    event.target instanceof HTMLInputElement ||
+    event.target instanceof HTMLTextAreaElement
+  ) {
+    return true;
+  }
+
+  // For select dropdowns, DON'T ignore any keys - let browser handle naturally
+  // This allows default arrow key navigation, Enter to select, Space to open, etc.
+  if (event.target instanceof HTMLSelectElement) {
+    return false; // Don't ignore - let our handlers or browser handle it
+  }
+
+  return true;
 };

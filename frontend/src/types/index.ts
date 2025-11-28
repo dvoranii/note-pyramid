@@ -2,7 +2,7 @@ export interface Note {
   name: string;
   id: string;
   high_res_image: string;
-  url: string;
+  url?: string;
   image?: string | null;
   category?: string;
 }

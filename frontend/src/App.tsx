@@ -7,6 +7,7 @@ import { DndProvider } from "./context/DndProvider";
 import { KeyboardNavigationProvider } from "./context/KeyboardNavigationContext/KeyboardNavigationProvider";
 import { GlobalKeydownHandler } from "./components/GlobalKeydownHandler/GlobalKeydownHandler";
 import { KeyboardNavIndicator } from "./components/KeyboardNavIndicator/KeyboardNavIndicator";
+import { Toast } from "./components/Toast/Toast";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <DndProvider>
             <GlobalKeydownHandler />
             <KeyboardNavIndicator />
+            <Toast />
             <Layout>
               <Routes>
                 <Route path="/" element={<PyramidBuilder />} />

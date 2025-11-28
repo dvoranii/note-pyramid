@@ -3,11 +3,13 @@ import { useState, useMemo } from "react";
 import { Search } from "lucide-react";
 import NoteCard from "./NoteCard/NoteCard";
 import notesData from "../../data/fragrance_notes_with_images.json";
+import { useKeyboardNavigation } from "../../context/KeyboardNavigationContext/useKeyboardNavigation";
 
 const Sidebar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [displayCount, setDisplayCount] = useState(12);
+  const { sidebarMode, setSidebarMode } = useKeyboardNavigation();
 
   const categories = useMemo(() => {
     return ["All", ...notesData.map((cat) => cat.category)];
@@ -40,7 +42,7 @@ const Sidebar = () => {
   return (
     <S.SidebarContainer>
       <S.SearchSection>
-        <S.SearchWrapper>
+        <S.SearchWrapper $isFocused={sidebarMode === "search"}>
           <S.SearchIcon>
             <Search size={20} />
           </S.SearchIcon>
@@ -49,6 +51,14 @@ const Sidebar = () => {
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSidebarMode("search")}
+            onBlur={() => {
+              setTimeout(() => {
+                if (sidebarMode === "search") {
+                  setSidebarMode("default");
+                }
+              }, 100);
+            }}
           />
         </S.SearchWrapper>
       </S.SearchSection>
@@ -60,6 +70,15 @@ const Sidebar = () => {
             setSelectedCategory(e.target.value);
             setDisplayCount(12);
           }}
+          onFocus={() => setSidebarMode("filter")}
+          onBlur={() => {
+            setTimeout(() => {
+              if (sidebarMode === "filter") {
+                setSidebarMode("default");
+              }
+            }, 100);
+          }}
+          $isFocused={sidebarMode === "filter"}
         >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
@@ -71,14 +90,15 @@ const Sidebar = () => {
 
       <S.NotesSection>
         <S.NotesGrid>
-          {displayedNotes.map((note) => (
-            <NoteCard key={note.id} note={note} />
+          {displayedNotes.map((note, index) => (
+            <NoteCard key={note.id} note={note} index={index} />
           ))}
         </S.NotesGrid>
 
         {hasMore && (
           <S.LoadMoreButton
             onClick={() => setDisplayCount((prev) => prev + 12)}
+            data-load-more-button="true"
           >
             Load More
           </S.LoadMoreButton>

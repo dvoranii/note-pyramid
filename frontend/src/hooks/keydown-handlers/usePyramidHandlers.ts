@@ -132,7 +132,9 @@ export const usePyramidHandlers = (
       clearFocus();
       navigation.setPyramidMode("level-selection");
       navigation.setHighlightedPyramidNoteIndex(null);
-      navigation.showToast("Exited level navigation");
+      navigation.showToast(
+        `Exited ${navigation.selectedLevel} level navigation - Level still selected`
+      );
       return true;
     }
 

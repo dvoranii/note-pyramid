@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { KeyboardNavigationContext } from "./KeyboardNavigationContext";
 import type {
   KeyboardNavigationState,
@@ -13,15 +13,17 @@ export const KeyboardNavigationProvider: React.FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [state, setState] = useState<KeyboardNavigationState>({
-    isEnabled: false, // Start disabled
+    isEnabled: false,
     activeContext: "pyramid",
     sidebarMode: "default",
     pyramidMode: "level-selection",
     selectedLevel: null,
-    highlightedNoteIndex: null,
+    highlightedSidebarNoteIndex: null,
     highlightedPyramidNoteIndex: null,
     toast: null,
   });
+
+  const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const enableNavigation = useCallback(() => {
     setState((prev) => ({ ...prev, isEnabled: true }));
@@ -44,8 +46,13 @@ export const KeyboardNavigationProvider: React.FC<{
     setState((prev) => ({
       ...prev,
       activeContext: context,
+
       sidebarMode: context === "sidebar" ? "default" : prev.sidebarMode,
-      pyramidMode: context === "pyramid" ? "level-selection" : prev.pyramidMode,
+      pyramidMode: "level-selection",
+      highlightedPyramidNoteIndex:
+        context === "sidebar" ? null : prev.highlightedPyramidNoteIndex,
+      highlightedSidebarNoteIndex:
+        context === "pyramid" ? null : prev.highlightedSidebarNoteIndex,
     }));
   }, []);
 
@@ -61,24 +68,38 @@ export const KeyboardNavigationProvider: React.FC<{
     setState((prev) => ({ ...prev, selectedLevel: level }));
   }, []);
 
+  const setHighlightedSidebarNoteIndex = useCallback((index: number | null) => {
+    setState((prev) => ({ ...prev, highlightedSidebarNoteIndex: index }));
+  }, []);
+
   const setHighlightedPyramidNoteIndex = useCallback((index: number | null) => {
     setState((prev) => ({ ...prev, highlightedPyramidNoteIndex: index }));
   }, []);
 
   const showToast = useCallback((message: string) => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+
     setState((prev) => ({
       ...prev,
       toast: { message, visible: true },
     }));
-    setTimeout(() => {
+
+    toastTimeoutRef.current = setTimeout(() => {
       setState((prev) => ({
         ...prev,
         toast: prev.toast ? { ...prev.toast, visible: false } : null,
       }));
+      toastTimeoutRef.current = null;
     }, 3000);
   }, []);
 
   const hideToast = useCallback(() => {
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
     setState((prev) => ({ ...prev, toast: null }));
   }, []);
 
@@ -90,6 +111,7 @@ export const KeyboardNavigationProvider: React.FC<{
     setSidebarMode,
     setPyramidMode,
     setSelectedLevel,
+    setHighlightedSidebarNoteIndex,
     setHighlightedPyramidNoteIndex,
     showToast,
     hideToast,

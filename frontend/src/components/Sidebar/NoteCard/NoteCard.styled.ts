@@ -1,13 +1,27 @@
 import styled from "styled-components";
 import { colors } from "../../../theme/colors";
 
-export const Card = styled.div<{ $isDragging: boolean }>`
+export const Card = styled.div<{
+  $isDragging: boolean;
+  $isHighlighted?: boolean;
+}>`
   background-color: ${colors.white};
   border-radius: 0.5rem;
   padding: 0.5rem;
   cursor: grab;
   transition: all 0.2s;
   opacity: ${(props) => (props.$isDragging ? 0.5 : 1)};
+
+  ${(props) =>
+    props.$isHighlighted &&
+    `
+    transform: translateY(-4px);
+    box-shadow: 
+      0 0 0 3px #10b981,
+      0 10px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 10;
+  `}
 
   &:active {
     cursor: grabbing;

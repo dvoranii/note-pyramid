@@ -8,10 +8,10 @@ export type PyramidLevel = "base" | "middle" | "top";
 export interface KeyboardNavigationState {
   isEnabled: boolean;
   activeContext: ActiveContext;
-  sidebarMode: SidebarMode;
+  sidebarMode: "default" | "search" | "filter" | "note-selection";
   pyramidMode: PyramidMode;
   selectedLevel: PyramidLevel | null;
-  highlightedNoteIndex: number | null;
+  highlightedSidebarNoteIndex: number | null;
   highlightedPyramidNoteIndex: number | null;
   toast: { message: string; visible: boolean } | null;
 }
@@ -20,9 +20,12 @@ export interface KeyboardNavigationActions {
   enableNavigation: () => void;
   disableNavigation: () => void;
   setActiveContext: (context: ActiveContext) => void;
-  setSidebarMode: (mode: SidebarMode) => void;
+  setSidebarMode: (
+    mode: "default" | "search" | "filter" | "note-selection"
+  ) => void;
   setPyramidMode: (mode: PyramidMode) => void;
   setSelectedLevel: (level: PyramidLevel | null) => void;
+  setHighlightedSidebarNoteIndex: (index: number | null) => void;
   setHighlightedPyramidNoteIndex: (index: number | null) => void;
   showToast: (message: string) => void;
   hideToast: () => void;
