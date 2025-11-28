@@ -15,7 +15,7 @@ export const LevelWrapper = styled.div<{ $isSelected?: boolean }>`
   ${(props) =>
     props.$isSelected &&
     `
-    outline: 2px solid green;
+    outline: 2px solid limegreen;
     outline-offset: 2px;
   `}
 
