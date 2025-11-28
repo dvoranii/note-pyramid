@@ -32,7 +32,6 @@ export const ModalTitle = styled.h2`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 `;
 
 export const FormGroup = styled.div`
@@ -65,6 +64,7 @@ export const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
+  margin-top: 1.2rem;
 `;
 
 export const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
@@ -99,4 +99,55 @@ export const Button = styled.button<{ $variant?: "primary" | "secondary" }>`
     opacity: 0.5;
     cursor: not-allowed;
   }
+`;
+
+// Alternative compact version
+export const RadioGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+`;
+
+export const RadioOption = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+
+  input[type="radio"] {
+    margin: 0;
+    accent-color: ${colors.brown[600]};
+    cursor: pointer;
+
+    &:focus {
+      outline: 2px solid ${colors.brown[600]};
+      outline-offset: 2px;
+    }
+  }
+
+  label {
+    font-size: 0.9rem;
+    color: ${colors.brown[700]};
+    cursor: pointer;
+    line-height: 1.4;
+
+    &:hover {
+      color: ${colors.brown[800]};
+    }
+  }
+`;
+
+export const HelpTextContainer = styled.div`
+  min-height: 1.25rem;
+  display: flex;
+  align-items: center;
+`;
+
+export const HelpText = styled.p`
+  font-size: 0.8rem;
+  color: ${colors.brown[600]};
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+  line-height: 1.3;
 `;

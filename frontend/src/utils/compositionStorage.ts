@@ -27,6 +27,27 @@ export const saveComposition = (
   return saved;
 };
 
+export const updateComposition = (
+  id: string,
+  updates: { name?: string; pyramidState?: PyramidState }
+): SavedComposition | null => {
+  const compositions = getCompositions();
+  const index = compositions.findIndex((c) => c.id === id);
+
+  if (index === -1) return null;
+
+  const updated: SavedComposition = {
+    ...compositions[index],
+    ...updates,
+    timestamp: new Date().toISOString(),
+  };
+
+  compositions[index] = updated;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(compositions));
+
+  return updated;
+};
+
 export const getCompositions = (): SavedComposition[] => {
   if (typeof window === "undefined") return [];
 
