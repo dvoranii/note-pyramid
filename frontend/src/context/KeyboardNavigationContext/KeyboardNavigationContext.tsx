@@ -14,6 +14,7 @@ export interface KeyboardNavigationState {
   highlightedSidebarNoteIndex: number | null;
   highlightedPyramidNoteIndex: number | null;
   toast: { message: string; visible: boolean } | null;
+  showToastMessages: boolean;
 }
 
 export interface KeyboardNavigationActions {
@@ -27,8 +28,9 @@ export interface KeyboardNavigationActions {
   setSelectedLevel: (level: PyramidLevel | null) => void;
   setHighlightedSidebarNoteIndex: (index: number | null) => void;
   setHighlightedPyramidNoteIndex: (index: number | null) => void;
-  showToast: (message: string) => void;
+  showToast: (message: string, force?: boolean) => void;
   hideToast: () => void;
+  toggleToastMessages: () => void;
 }
 
 export type KeyboardNavigationContextType = KeyboardNavigationState &

@@ -21,6 +21,7 @@ export const KeyboardNavigationProvider: React.FC<{
     highlightedSidebarNoteIndex: null,
     highlightedPyramidNoteIndex: null,
     toast: null,
+    showToastMessages: true,
   });
 
   const toastTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -76,24 +77,36 @@ export const KeyboardNavigationProvider: React.FC<{
     setState((prev) => ({ ...prev, highlightedPyramidNoteIndex: index }));
   }, []);
 
-  const showToast = useCallback((message: string) => {
-    if (toastTimeoutRef.current) {
-      clearTimeout(toastTimeoutRef.current);
-    }
-
+  const toggleToastMessages = useCallback(() => {
     setState((prev) => ({
       ...prev,
-      toast: { message, visible: true },
+      showToastMessages: !prev.showToastMessages,
     }));
+  }, []);
 
-    toastTimeoutRef.current = setTimeout(() => {
+  const showToast = useCallback(
+    (message: string, force: boolean = false) => {
+      if (!force && !state.showToastMessages) return;
+
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+
       setState((prev) => ({
         ...prev,
-        toast: prev.toast ? { ...prev.toast, visible: false } : null,
+        toast: { message, visible: true },
       }));
-      toastTimeoutRef.current = null;
-    }, 3000);
-  }, []);
+
+      toastTimeoutRef.current = setTimeout(() => {
+        setState((prev) => ({
+          ...prev,
+          toast: prev.toast ? { ...prev.toast, visible: false } : null,
+        }));
+        toastTimeoutRef.current = null;
+      }, 3000);
+    },
+    [state.showToastMessages]
+  );
 
   const hideToast = useCallback(() => {
     if (toastTimeoutRef.current) {
@@ -115,6 +128,7 @@ export const KeyboardNavigationProvider: React.FC<{
     setHighlightedPyramidNoteIndex,
     showToast,
     hideToast,
+    toggleToastMessages,
   };
 
   return (
