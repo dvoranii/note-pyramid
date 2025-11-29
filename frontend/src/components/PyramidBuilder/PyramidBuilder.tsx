@@ -22,14 +22,13 @@ const PyramidBuilder = () => {
     canGenerate,
     loadPyramidState,
     clearPyramid,
+    currentCompositionId,
+    currentCompositionName,
+    setCurrentComposition,
   } = usePyramid();
   const navigate = useNavigate();
-  const {
-    selectedLevel,
-    pyramidMode,
-    // highlightedPyramidNoteIndex,
-    highlightedPyramidNoteIndices,
-  } = useKeyboardNavigation();
+  const { selectedLevel, pyramidMode, highlightedPyramidNoteIndices } =
+    useKeyboardNavigation();
 
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isSavedCompositionsOpen, setIsSavedCompositionsOpen] = useState(false);
@@ -39,11 +38,6 @@ const PyramidBuilder = () => {
   const [analysisLevel, setAnalysisLevel] = useState<"beginner" | "expert">(
     "beginner"
   );
-  const [currentCompositionId, setCurrentCompositionId] = useState<
-    string | null
-  >(null);
-  const [currentCompositionName, setCurrentCompositionName] =
-    useState<string>("");
 
   const hasUnsavedChanges = useMemo(() => {
     if (!currentCompositionId) return true;
@@ -60,15 +54,16 @@ const PyramidBuilder = () => {
   }, [pyramidState, currentCompositionId, savedCompositions]);
 
   const handleLoadComposition = (composition: SavedComposition) => {
-    loadPyramidState(composition.pyramidState);
-    setCurrentCompositionId(composition.id);
-    setCurrentCompositionName(composition.name);
+    loadPyramidState(
+      composition.pyramidState,
+      composition.id,
+      composition.name
+    );
     setIsSavedCompositionsOpen(false);
   };
 
   const handleSaveComposition = (name: string, saveMode: "update" | "new") => {
     if (saveMode === "update" && currentCompositionId) {
-      // Update existing composition
       const updated = updateComposition(currentCompositionId, {
         name,
         pyramidState,
@@ -79,14 +74,12 @@ const PyramidBuilder = () => {
             comp.id === currentCompositionId ? updated : comp
           )
         );
-        setCurrentCompositionName(name); // Update current name
+        setCurrentComposition(currentCompositionId, name); // ✅ Use context setter
       }
     } else {
-      // Create new composition
       const newComposition = saveComposition(name, pyramidState);
       setSavedCompositions((prev) => [newComposition, ...prev]);
-      setCurrentCompositionId(newComposition.id);
-      setCurrentCompositionName(newComposition.name);
+      setCurrentComposition(newComposition.id, newComposition.name); // ✅ Use context setter
     }
     setIsSaveModalOpen(false);
   };
@@ -113,8 +106,6 @@ const PyramidBuilder = () => {
       )
     ) {
       clearPyramid();
-      setCurrentCompositionId(null);
-      setCurrentCompositionName("");
     }
   };
 
@@ -155,7 +146,6 @@ const PyramidBuilder = () => {
           onRemoveNote={removeNoteFromLevel}
           selectedLevel={selectedLevel}
           pyramidMode={pyramidMode}
-          // highlightedPyramidNoteIndex={highlightedPyramidNoteIndex}
           highlightedPyramidNoteIndices={highlightedPyramidNoteIndices}
         />
         <S.ControlSection>

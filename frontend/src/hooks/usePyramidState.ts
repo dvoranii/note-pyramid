@@ -3,59 +3,102 @@ import type { PyramidState, Note } from "../types";
 
 const PYRAMID_STORAGE_KEY = "pyramid-current-work";
 
+interface PersistedPyramidState {
+  pyramidState: PyramidState;
+  currentCompositionId: string | null;
+  currentCompositionName: string;
+}
+
 export const usePyramidState = () => {
-  const [pyramidState, setPyramidState] = useState<PyramidState>(() => {
+  const [state, setState] = useState<PersistedPyramidState>(() => {
     if (typeof window === "undefined") {
-      return { top: [], middle: [], base: [] };
+      return {
+        pyramidState: { top: [], middle: [], base: [] },
+        currentCompositionId: null,
+        currentCompositionName: "",
+      };
     }
 
     const saved = localStorage.getItem(PYRAMID_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : { top: [], middle: [], base: [] };
+    if (saved) {
+      return JSON.parse(saved);
+    }
+
+    return {
+      pyramidState: { top: [], middle: [], base: [] },
+      currentCompositionId: null,
+      currentCompositionName: "",
+    };
   });
 
   useEffect(() => {
-    localStorage.setItem(PYRAMID_STORAGE_KEY, JSON.stringify(pyramidState));
-  }, [pyramidState]);
+    localStorage.setItem(PYRAMID_STORAGE_KEY, JSON.stringify(state));
+  }, [state]);
 
   const addNoteToLevel = (level: keyof PyramidState, note: Note) => {
-    setPyramidState((prev) => ({
+    setState((prev) => ({
       ...prev,
-      [level]: [...prev[level], note],
+      pyramidState: {
+        ...prev.pyramidState,
+        [level]: [...prev.pyramidState[level], note],
+      },
     }));
   };
 
   const removeNoteFromLevel = (level: keyof PyramidState, noteId: string) => {
-    setPyramidState((prev) => ({
+    setState((prev) => ({
       ...prev,
-      [level]: prev[level].filter((note) => note.id !== noteId),
+      pyramidState: {
+        ...prev.pyramidState,
+        [level]: prev.pyramidState[level].filter((note) => note.id !== noteId),
+      },
     }));
   };
 
   const clearPyramid = () => {
-    setPyramidState({
-      top: [],
-      middle: [],
-      base: [],
+    setState({
+      pyramidState: { top: [], middle: [], base: [] },
+      currentCompositionId: null,
+      currentCompositionName: "",
     });
-
     localStorage.removeItem(PYRAMID_STORAGE_KEY);
   };
 
-  const loadPyramidState = (newState: PyramidState) => {
-    setPyramidState(newState);
+  const loadPyramidState = (
+    newState: PyramidState,
+    compositionId?: string,
+    compositionName?: string
+  ) => {
+    setState((prev) => ({
+      ...prev,
+      pyramidState: newState,
+      currentCompositionId: compositionId || null,
+      currentCompositionName: compositionName || "",
+    }));
+  };
+
+  const setCurrentComposition = (id: string | null, name: string = "") => {
+    setState((prev) => ({
+      ...prev,
+      currentCompositionId: id,
+      currentCompositionName: name,
+    }));
   };
 
   const canGenerate =
-    pyramidState.top.length > 0 &&
-    pyramidState.middle.length > 0 &&
-    pyramidState.base.length > 0;
+    state.pyramidState.top.length > 0 &&
+    state.pyramidState.middle.length > 0 &&
+    state.pyramidState.base.length > 0;
 
   return {
-    pyramidState,
+    pyramidState: state.pyramidState,
+    currentCompositionId: state.currentCompositionId,
+    currentCompositionName: state.currentCompositionName,
     addNoteToLevel,
     removeNoteFromLevel,
     clearPyramid,
     loadPyramidState,
+    setCurrentComposition,
     canGenerate,
   };
 };
