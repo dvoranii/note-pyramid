@@ -7,7 +7,8 @@ interface PyramidProps {
   onRemoveNote: (level: "top" | "middle" | "base", noteId: string) => void;
   selectedLevel?: "top" | "middle" | "base" | null;
   pyramidMode?: "level-selection" | "level-navigation";
-  highlightedPyramidNoteIndex?: number | null;
+  // highlightedPyramidNoteIndex?: number | null;
+  highlightedPyramidNoteIndices?: number[];
 }
 
 const Pyramid = ({
@@ -15,7 +16,8 @@ const Pyramid = ({
   onRemoveNote,
   selectedLevel,
   pyramidMode,
-  highlightedPyramidNoteIndex,
+  // highlightedPyramidNoteIndex,
+  highlightedPyramidNoteIndices,
 }: PyramidProps) => {
   return (
     <PyramidContainer>
@@ -26,8 +28,11 @@ const Pyramid = ({
           notes={pyramidState.top}
           onRemoveNote={onRemoveNote}
           pyramidMode={pyramidMode}
-          highlightedNoteIndex={
-            selectedLevel === "top" ? highlightedPyramidNoteIndex : null
+          // highlightedNoteIndex={
+          //   selectedLevel === "top" ? highlightedPyramidNoteIndex : null
+          // }
+          highlightedPyramidNoteIndices={
+            selectedLevel === "top" ? highlightedPyramidNoteIndices : [] // ✅ Pass the array
           }
         />
       </LevelWrapper>
@@ -39,8 +44,11 @@ const Pyramid = ({
           notes={pyramidState.middle}
           onRemoveNote={onRemoveNote}
           pyramidMode={pyramidMode}
-          highlightedNoteIndex={
-            selectedLevel === "middle" ? highlightedPyramidNoteIndex : null
+          // highlightedNoteIndex={
+          //   selectedLevel === "middle" ? highlightedPyramidNoteIndex : null
+          // }
+          highlightedPyramidNoteIndices={
+            selectedLevel === "middle" ? highlightedPyramidNoteIndices : []
           }
         />
       </LevelWrapper>
@@ -51,9 +59,12 @@ const Pyramid = ({
           label="Base"
           notes={pyramidState.base}
           onRemoveNote={onRemoveNote}
-          pyramidMode={pyramidMode} // NEW
-          highlightedNoteIndex={
-            selectedLevel === "base" ? highlightedPyramidNoteIndex : null
+          pyramidMode={pyramidMode}
+          // highlightedNoteIndex={
+          //   selectedLevel === "base" ? highlightedPyramidNoteIndex : null
+          // }
+          highlightedPyramidNoteIndices={
+            selectedLevel === "base" ? highlightedPyramidNoteIndices : []
           }
         />
       </LevelWrapper>

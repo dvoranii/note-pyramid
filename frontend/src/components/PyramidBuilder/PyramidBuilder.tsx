@@ -24,8 +24,12 @@ const PyramidBuilder = () => {
     clearPyramid,
   } = usePyramid();
   const navigate = useNavigate();
-  const { selectedLevel, pyramidMode, highlightedPyramidNoteIndex } =
-    useKeyboardNavigation();
+  const {
+    selectedLevel,
+    pyramidMode,
+    // highlightedPyramidNoteIndex,
+    highlightedPyramidNoteIndices,
+  } = useKeyboardNavigation();
 
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isSavedCompositionsOpen, setIsSavedCompositionsOpen] = useState(false);
@@ -151,7 +155,8 @@ const PyramidBuilder = () => {
           onRemoveNote={removeNoteFromLevel}
           selectedLevel={selectedLevel}
           pyramidMode={pyramidMode}
-          highlightedPyramidNoteIndex={highlightedPyramidNoteIndex}
+          // highlightedPyramidNoteIndex={highlightedPyramidNoteIndex}
+          highlightedPyramidNoteIndices={highlightedPyramidNoteIndices}
         />
         <S.ControlSection>
           <S.ButtonGroup>

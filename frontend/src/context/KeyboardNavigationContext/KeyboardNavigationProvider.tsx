@@ -20,6 +20,7 @@ export const KeyboardNavigationProvider: React.FC<{
     selectedLevel: null,
     highlightedSidebarNoteIndex: null,
     highlightedPyramidNoteIndex: null,
+    highlightedPyramidNoteIndices: [],
     toast: null,
     showToastMessages: true,
   });
@@ -74,7 +75,37 @@ export const KeyboardNavigationProvider: React.FC<{
   }, []);
 
   const setHighlightedPyramidNoteIndex = useCallback((index: number | null) => {
-    setState((prev) => ({ ...prev, highlightedPyramidNoteIndex: index }));
+    setState((prev) => ({
+      ...prev,
+      highlightedPyramidNoteIndex: index,
+      highlightedPyramidNoteIndices: index !== null ? [index] : [], // Sync with single highlight
+    }));
+  }, []);
+
+  const setHighlightedPyramidNoteIndices = useCallback((indices: number[]) => {
+    setState((prev) => ({ ...prev, highlightedPyramidNoteIndices: indices }));
+  }, []);
+
+  const togglePyramidNoteHighlight = useCallback((index: number): number[] => {
+    let newIndices: number[] = [];
+
+    setState((prev) => {
+      const currentIndices = prev.highlightedPyramidNoteIndices;
+      const isCurrentlyHighlighted = currentIndices.includes(index);
+
+      if (isCurrentlyHighlighted) {
+        newIndices = currentIndices.filter((i) => i !== index);
+      } else {
+        newIndices = [...currentIndices, index].slice(0, 9); // Max 9 notes
+      }
+
+      return {
+        ...prev,
+        highlightedPyramidNoteIndices: newIndices,
+      };
+    });
+
+    return newIndices;
   }, []);
 
   const toggleToastMessages = useCallback(() => {
@@ -126,6 +157,8 @@ export const KeyboardNavigationProvider: React.FC<{
     setSelectedLevel,
     setHighlightedSidebarNoteIndex,
     setHighlightedPyramidNoteIndex,
+    setHighlightedPyramidNoteIndices,
+    togglePyramidNoteHighlight,
     showToast,
     hideToast,
     toggleToastMessages,

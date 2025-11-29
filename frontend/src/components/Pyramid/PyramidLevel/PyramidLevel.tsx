@@ -30,7 +30,8 @@ interface PyramidLevelProps {
   notes: Note[];
   onRemoveNote: (level: "top" | "middle" | "base", noteId: string) => void;
   pyramidMode?: "level-selection" | "level-navigation";
-  highlightedNoteIndex?: number | null;
+  // highlightedNoteIndex?: number | null;
+  highlightedPyramidNoteIndices?: number[];
 }
 
 const PyramidLevel = ({
@@ -38,7 +39,8 @@ const PyramidLevel = ({
   notes,
   onRemoveNote,
   pyramidMode,
-  highlightedNoteIndex,
+  // highlightedNoteIndex,
+  highlightedPyramidNoteIndices,
 }: PyramidLevelProps) => {
   const { setNodeRef, isOver } = useDroppable({
     id: level,
@@ -61,9 +63,14 @@ const PyramidLevel = ({
   const gridWidth = getGridWidth(level, hasMultipleRows);
   const gridGap = getGridGap(level, hasMultipleRows, totalSlots);
 
-  const isNavigating = pyramidMode === "level-navigation";
-  const shouldHighlightNote = (index: number) =>
-    isNavigating && highlightedNoteIndex === index;
+  // const isNavigating = pyramidMode === "level-navigation";
+
+  const shouldHighlightNote = (index: number) => {
+    const isNavigating = pyramidMode === "level-navigation";
+    return (
+      isNavigating && (highlightedPyramidNoteIndices?.includes(index) ?? false)
+    );
+  };
 
   return (
     <LevelContainer>

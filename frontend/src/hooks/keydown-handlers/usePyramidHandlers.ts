@@ -47,9 +47,9 @@ export const usePyramidHandlers = (
       const levelNotes = pyramid.pyramidState[navigation.selectedLevel];
       if (levelNotes.length > 0) {
         navigation.setPyramidMode("level-navigation");
-        navigation.setHighlightedPyramidNoteIndex(0);
+        navigation.setHighlightedPyramidNoteIndices([0]);
         navigation.showToast(
-          `Navigating ${navigation.selectedLevel} notes - Use ← → to move, Shift+D to delete`
+          `Navigating ${navigation.selectedLevel} notes - Use ← → arrows for single note, 1-9 for multi-select, Shift+D to delete`
         );
       } else {
         navigation.showToast(
@@ -71,75 +71,141 @@ export const usePyramidHandlers = (
 
   const handleLevelNavigation = (event: KeyboardEvent): boolean => {
     const levelNotes = pyramid.pyramidState[navigation.selectedLevel!];
+    const highlightedIndices = navigation.highlightedPyramidNoteIndices;
+    const highlightCount = highlightedIndices.length;
 
-    if (
-      event.key === "ArrowLeft" &&
-      navigation.highlightedPyramidNoteIndex !== null
-    ) {
+    // NUMBER KEYS: Multi-selection toggle (1-9)
+    if (event.key >= "1" && event.key <= "9") {
       event.preventDefault();
       clearFocus();
-      if (navigation.highlightedPyramidNoteIndex > 0) {
-        navigation.setHighlightedPyramidNoteIndex(
-          navigation.highlightedPyramidNoteIndex - 1
-        );
-      }
-      return true;
-    }
+      const numberIndex = parseInt(event.key) - 1;
 
-    if (
-      event.key === "ArrowRight" &&
-      navigation.highlightedPyramidNoteIndex !== null
-    ) {
-      event.preventDefault();
-      clearFocus();
-      if (navigation.highlightedPyramidNoteIndex < levelNotes.length - 1) {
-        navigation.setHighlightedPyramidNoteIndex(
-          navigation.highlightedPyramidNoteIndex + 1
-        );
-      }
-      return true;
-    }
+      // Only process if this note exists
+      if (numberIndex < levelNotes.length) {
+        const isCurrentlyHighlighted = highlightedIndices.includes(numberIndex);
 
-    if (
-      event.shiftKey &&
-      event.key === "D" &&
-      navigation.highlightedPyramidNoteIndex !== null
-    ) {
-      event.preventDefault();
-      clearFocus();
-      const noteToDelete = levelNotes[navigation.highlightedPyramidNoteIndex];
-      if (noteToDelete) {
-        pyramid.removeNoteFromLevel(navigation.selectedLevel!, noteToDelete.id);
-
-        const newLength = levelNotes.length - 1;
-        if (newLength === 0) {
-          navigation.setHighlightedPyramidNoteIndex(null);
-          navigation.setPyramidMode("level-selection");
-          navigation.showToast("No notes remaining in level");
-        } else if (navigation.highlightedPyramidNoteIndex >= newLength) {
-          navigation.setHighlightedPyramidNoteIndex(newLength - 1);
+        // Calculate what the new state WOULD be
+        let predictedNewIndices: number[];
+        if (isCurrentlyHighlighted) {
+          predictedNewIndices = highlightedIndices.filter(
+            (i) => i !== numberIndex
+          );
+        } else {
+          predictedNewIndices = [...highlightedIndices, numberIndex].slice(
+            0,
+            9
+          );
         }
 
+        // Check if this would leave us with 0 notes
+        if (predictedNewIndices.length === 0) {
+          // Exit level immediately
+          navigation.setHighlightedPyramidNoteIndices([]);
+          navigation.setPyramidMode("level-selection");
+          navigation.showToast("Exited level - No notes selected");
+        } else {
+          // Safe to toggle
+          navigation.togglePyramidNoteHighlight(numberIndex);
+          const action = isCurrentlyHighlighted ? "deselected" : "selected";
+          navigation.showToast(
+            `Note ${numberIndex + 1} ${action} (${
+              predictedNewIndices.length
+            } total)`
+          );
+        }
+        return true;
+      }
+    }
+
+    // ARROW KEYS: Single note navigation
+    if (highlightCount === 1) {
+      const currentIndex = highlightedIndices[0];
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        clearFocus();
+        if (currentIndex > 0) {
+          navigation.setHighlightedPyramidNoteIndices([currentIndex - 1]);
+        }
+        return true;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        clearFocus();
+        if (currentIndex < levelNotes.length - 1) {
+          navigation.setHighlightedPyramidNoteIndices([currentIndex + 1]);
+        }
+        return true;
+      }
+    } else if (
+      highlightCount > 1 &&
+      (event.key === "ArrowLeft" || event.key === "ArrowRight")
+    ) {
+      event.preventDefault();
+      navigation.showToast(
+        `Arrow keys disabled (${highlightCount} notes selected). Press number keys to deselect or Esc to exit.`,
+        true
+      );
+      return true;
+    } else if (
+      highlightCount === 0 &&
+      (event.key === "ArrowLeft" || event.key === "ArrowRight")
+    ) {
+      event.preventDefault();
+      navigation.showToast("No notes selected");
+      return true;
+    }
+
+    // SHIFT+D: Delete highlighted notes
+    if (event.shiftKey && event.key === "D" && highlightCount > 0) {
+      event.preventDefault();
+      clearFocus();
+
+      const sortedIndices = [...highlightedIndices].sort((a, b) => b - a);
+      const notesToDelete = sortedIndices.map((idx) => levelNotes[idx]);
+
+      sortedIndices.forEach((index) => {
+        const noteToDelete = levelNotes[index];
+        if (noteToDelete) {
+          pyramid.removeNoteFromLevel(
+            navigation.selectedLevel!,
+            noteToDelete.id
+          );
+        }
+      });
+
+      const remainingCount = levelNotes.length - highlightCount;
+
+      if (remainingCount === 0) {
+        navigation.setHighlightedPyramidNoteIndices([]);
+        navigation.setPyramidMode("level-selection");
+        navigation.showToast("Deleted all notes - level empty");
+      } else {
+        navigation.setHighlightedPyramidNoteIndices([0]);
+        const noteNames = notesToDelete.map((n) => n.name).join(", ");
         navigation.showToast(
-          `Deleted ${noteToDelete.name} from ${navigation.selectedLevel} level`
+          highlightCount === 1
+            ? `Deleted ${noteNames}`
+            : `Deleted ${highlightCount} notes`
         );
       }
       return true;
     }
 
+    // ESCAPE: Exit level navigation
     if (event.key === "Escape") {
       event.preventDefault();
       clearFocus();
       navigation.setPyramidMode("level-selection");
-      navigation.setHighlightedPyramidNoteIndex(null);
+      navigation.setHighlightedPyramidNoteIndices([]);
       navigation.showToast(
-        `Exited ${navigation.selectedLevel} level navigation - Level still selected`
+        `Exited ${navigation.selectedLevel} level - Press Esc again to deselect`
       );
       return true;
     }
 
     return false;
   };
-
   return { handlePyramidKeys };
 };
