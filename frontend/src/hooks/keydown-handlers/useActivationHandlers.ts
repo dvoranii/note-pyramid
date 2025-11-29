@@ -1,5 +1,6 @@
 import type { NavigationContext } from "./types";
 
+// useActivationHandlers.ts
 export const useActivationHandlers = (navigation: NavigationContext) => {
   const clearFocus = () => {
     if (document.activeElement) {
@@ -30,14 +31,6 @@ export const useActivationHandlers = (navigation: NavigationContext) => {
       return true;
     }
 
-    if (event.ctrlKey && event.shiftKey && event.key === "K") {
-      event.preventDefault();
-
-      const newState = !navigation.showToastMessages ? "enabled" : "disabled";
-      navigation.showToast(`Guide messages ${newState}`, true);
-
-      navigation.toggleToastMessages();
-    }
     return false;
   };
 

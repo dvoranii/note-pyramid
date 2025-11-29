@@ -6,6 +6,7 @@ import { usePyramidHandlers } from "./keydown-handlers/usePyramidHandlers";
 import { useSidebarHandlers } from "./keydown-handlers/useSidebarHandlers";
 import { useGlobalHandlers } from "./keydown-handlers/useGlobalHandlers";
 
+// useGlobalKeydown.ts
 export const useGlobalKeydown = () => {
   const navigation = useKeyboardNavigation();
   const pyramid = usePyramid();
@@ -17,7 +18,22 @@ export const useGlobalKeydown = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Activation handler always runs (for Ctrl+K)
       if (activationHandlers.handleActivation(event)) {
+        return;
+      }
+
+      // Toast toggle - only when navigation is enabled
+      if (
+        navigation.isEnabled &&
+        event.ctrlKey &&
+        event.shiftKey &&
+        event.key === "K"
+      ) {
+        event.preventDefault();
+        const newState = !navigation.showToastMessages ? "enabled" : "disabled";
+        navigation.showToast(`Guide messages ${newState}`, true);
+        navigation.toggleToastMessages();
         return;
       }
 
@@ -56,8 +72,10 @@ export const useGlobalKeydown = () => {
     pyramidHandlers,
     sidebarHandlers,
     globalHandlers,
+    navigation.showToastMessages, // Add this dependency
   ]);
 };
+
 const shouldIgnoreEvent = (event: KeyboardEvent): boolean => {
   const isFocusedOnInput =
     event.target instanceof HTMLInputElement ||
