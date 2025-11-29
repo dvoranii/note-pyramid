@@ -18,6 +18,7 @@ export const MainContent = styled.main<{
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  position: relative;
 
   ${(props) =>
     props.$fullWidth &&
@@ -47,4 +48,28 @@ export const SidebarWrapper = styled.div<{ $isActive?: boolean }>`
   transition: border-color 0.2s ease;
 
   box-sizing: border-box;
+`;
+
+export const HelpIconWrapper = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 18px;
+`;
+
+export const HelpIcon = styled.button`
+  border-radius: 50%;
+  border: 2px solid black;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 200ms ease;
+
+  &:hover {
+    cursor: pointer;
+    background: ${colors.brown[900]};
+    color: white;
+  }
 `;

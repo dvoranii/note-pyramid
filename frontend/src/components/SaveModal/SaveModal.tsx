@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Modal } from "../Modal/Modal";
 import * as S from "./SaveModal.styled";
 
 interface SaveModalProps {
@@ -47,15 +48,13 @@ export const SaveModal = ({
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <S.ModalOverlay onClick={handleClose}>
-      <S.ModalContent onClick={(e) => e.stopPropagation()}>
-        <S.ModalTitle>
-          {showSaveOptions ? "Save Changes" : "Save Note Breakdown"}
-        </S.ModalTitle>
-
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={showSaveOptions ? "Save Changes" : "Save Note Breakdown"}
+    >
+      <S.ModalBody>
         <S.Form onSubmit={handleSubmit}>
           {showSaveOptions && (
             <S.RadioGroup>
@@ -105,7 +104,7 @@ export const SaveModal = ({
             </S.Button>
           </S.ButtonGroup>
         </S.Form>
-      </S.ModalContent>
-    </S.ModalOverlay>
+      </S.ModalBody>
+    </Modal>
   );
 };
