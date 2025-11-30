@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { colors } from "../../theme/colors";
 
 export const ModalBody = styled.div`
-  padding: 1.5rem;
+  padding: 1.2rem;
 `;
 
 export const GridContainer = styled.div`
@@ -28,11 +28,11 @@ interface GridSectionProps {
   $borderRight?: boolean;
   $borderBottom?: boolean;
   $borderLeft?: boolean;
+
+  $borderRadius?: string;
 }
 
 export const GridSection = styled.div<GridSectionProps>`
-  /* border: 1px solid ${colors.beige[400]}; */
-  padding: 1.25rem;
   background: ${colors.beige[50]};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   height: 100%;
@@ -45,41 +45,34 @@ export const GridSection = styled.div<GridSectionProps>`
     props.$borderBottom ? `1px solid ${colors.beige[400]}` : "none"};
   border-left: ${(props) =>
     props.$borderLeft ? `1px solid ${colors.beige[400]}` : "none"};
+
+  border-radius: ${(props) => props.$borderRadius || "0"};
 `;
 
 export const Section = styled.div`
   margin-bottom: 0;
 `;
 
-// export const SectionTitle = styled.h3`
-//   color: ${colors.brown[700]};
-//   margin: 0 0 0.75rem 0;
-//   font-size: 1.1rem;
-//   font-weight: 600;
-// `;
-
 export const SectionTitle = styled.h3`
+  padding: 1rem;
   color: ${colors.brown[700]};
   margin: 0 0 0.75rem 0;
   font-size: 1.1rem;
   font-weight: 600;
-  padding-bottom: 0.5rem;
   border-bottom: 1px solid ${colors.beige[300]};
 `;
 
 export const SectionContent = styled.div`
   color: ${colors.brown[600]};
   line-height: 1.5;
-
-  /* p {
-    margin: 0 0 0.5rem 0;
-  } */
 `;
 
 export const ShortcutList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding-left: 12px;
+  padding-bottom: 12px;
 `;
 
 export const ShortcutItem = styled.div`
@@ -110,7 +103,9 @@ export const Description = styled.span`
 export const FeatureList = styled.ul`
   color: ${colors.brown[600]};
   margin: 0;
-  padding-left: 1rem;
+  margin-inline-start: 24px;
+  padding-left: 12px;
+  padding-bottom: 12px;
   line-height: 1.5;
   font-size: 0.9rem;
 

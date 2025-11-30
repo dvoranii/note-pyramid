@@ -18,6 +18,22 @@ export const useSidebarHandlers = (
 
     if (activeContext !== "sidebar") return false;
 
+    // Shift+L - Load more notes
+    if (event.shiftKey && event.key === "L") {
+      event.preventDefault();
+      clearFocus();
+      const loadMoreButton = document.querySelector(
+        '[data-load-more-button="true"]'
+      ) as HTMLButtonElement;
+      if (loadMoreButton && !loadMoreButton.disabled) {
+        loadMoreButton.click();
+        navigation.showToast("Loading more notes...");
+      } else {
+        navigation.showToast("No more notes to load or button not available");
+      }
+      return true;
+    }
+
     switch (sidebarMode) {
       case "default":
         return handleSidebarDefault(event);
@@ -91,22 +107,6 @@ export const useSidebarHandlers = (
         } else {
           navigation.showToast("No notes available to select");
         }
-      }
-      return true;
-    }
-
-    // Shift+L - Load more notes
-    if (event.shiftKey && event.key === "L") {
-      event.preventDefault();
-      clearFocus();
-      const loadMoreButton = document.querySelector(
-        '[data-load-more-button="true"]'
-      ) as HTMLButtonElement;
-      if (loadMoreButton && !loadMoreButton.disabled) {
-        loadMoreButton.click();
-        navigation.showToast("Loading more notes...");
-      } else {
-        navigation.showToast("No more notes to load or button not available");
       }
       return true;
     }

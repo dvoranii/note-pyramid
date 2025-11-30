@@ -32,7 +32,6 @@ export const SearchWrapper = styled.div<{ $isFocused?: boolean }>`
   ${(props) =>
     props.$isFocused &&
     `
-    outline: 2px solid ${colors.brown[900]};
     outline-offset: 2px;
   `}
 `;

@@ -11,6 +11,7 @@ export const Card = styled.div<{
   cursor: grab;
   transition: all 0.2s;
   opacity: ${(props) => (props.$isDragging ? 0.5 : 1)};
+  min-width: 88px;
 
   ${(props) =>
     props.$isHighlighted &&

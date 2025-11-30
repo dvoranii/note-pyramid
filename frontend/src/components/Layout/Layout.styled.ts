@@ -4,7 +4,7 @@ import { colors } from "../../theme/colors";
 export const LayoutContainer = styled.div`
   display: flex;
   height: 100vh;
-  background-color: ${colors.beige[100]};
+  /* background-color: ${colors.beige[100]}; */
   overflow: hidden;
 `;
 
@@ -19,6 +19,11 @@ export const MainContent = styled.main<{
   justify-content: center;
   padding: 2rem;
   position: relative;
+  background: radial-gradient(
+    circle at center,
+    #ffffff 0%,
+    ${colors.beige[200]} 100%
+  );
 
   ${(props) =>
     props.$fullWidth &&

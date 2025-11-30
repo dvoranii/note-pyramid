@@ -30,7 +30,13 @@ export const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
           {/* Column 1: Introduction & Features */}
 
           <S.GridColumn>
-            <S.GridSection $borderTop $borderLeft $borderRight $borderBottom>
+            <S.GridSection
+              $borderTop
+              $borderLeft
+              $borderRight
+              $borderBottom
+              $borderRadius="0.75rem 0 0 0"
+            >
               <S.SectionTitle>🌐 Global Shortcuts</S.SectionTitle>
               <S.ShortcutList>
                 <S.ShortcutItem>
@@ -57,7 +63,12 @@ export const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
 
           {/* Column 2: Pyramid Shortcuts */}
           <S.GridColumn>
-            <S.GridSection $borderTop $borderRight $borderBottom>
+            <S.GridSection
+              $borderTop
+              $borderRight
+              $borderBottom
+              $borderRadius="0 0.75rem 0 0"
+            >
               <S.SectionTitle>🔺 Pyramid Shortcuts</S.SectionTitle>
               <S.ShortcutList>
                 <S.ShortcutItem>
@@ -90,7 +101,12 @@ export const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
 
           {/* Column 3: Sidebar Shortcuts */}
           <S.GridColumn>
-            <S.GridSection $borderLeft $borderRight $borderBottom>
+            <S.GridSection
+              $borderLeft
+              $borderRight
+              $borderBottom
+              $borderRadius="0 0 0 0.75rem"
+            >
               <S.SectionTitle>📁 Sidebar Shortcuts</S.SectionTitle>
               <S.ShortcutList>
                 <S.ShortcutItem>
@@ -125,7 +141,11 @@ export const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
 
           {/* Column 4: Features */}
           <S.GridColumn>
-            <S.GridSection $borderRight $borderBottom>
+            <S.GridSection
+              $borderRight
+              $borderBottom
+              $borderRadius="0 0 0.75rem 0"
+            >
               <S.SectionTitle>✨ Features</S.SectionTitle>
               <S.FeatureList>
                 <li>Search and filter fragrance notes</li>

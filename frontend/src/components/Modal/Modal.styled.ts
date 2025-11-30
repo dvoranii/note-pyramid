@@ -20,7 +20,7 @@ export const ModalContent = styled.div<{ $maxWidth: string }>`
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   width: 90%;
   max-width: ${(props) => props.$maxWidth};
-  max-height: 90vh;
+  max-height: 92vh;
   overflow-y: auto;
 `;
 
