@@ -14,6 +14,7 @@ import {
 } from "../../utils/compositionStorage";
 import type { SavedComposition } from "../../utils/compositionStorage";
 import { useKeyboardNavigation } from "../../context/KeyboardNavigationContext/useKeyboardNavigation";
+import { ClearModal } from "../ClearModal/ClearModal";
 
 const PyramidBuilder = () => {
   const {
@@ -38,6 +39,16 @@ const PyramidBuilder = () => {
   const [analysisLevel, setAnalysisLevel] = useState<"beginner" | "expert">(
     "beginner"
   );
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
+
+  const handleClearPyramid = () => {
+    setIsClearModalOpen(true);
+  };
+
+  const handleConfirmClear = () => {
+    clearPyramid();
+    setCurrentComposition(null, "");
+  };
 
   const hasUnsavedChanges = useMemo(() => {
     if (!currentCompositionId) return true;
@@ -97,16 +108,6 @@ const PyramidBuilder = () => {
 
   const handleSaveClick = () => {
     setIsSaveModalOpen(true);
-  };
-
-  const handleClearPyramid = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to clear all notes from the pyramid?"
-      )
-    ) {
-      clearPyramid();
-    }
   };
 
   const handleDeleteComposition = (id: string) => {
@@ -186,6 +187,12 @@ const PyramidBuilder = () => {
         onDeleteComposition={handleDeleteComposition}
         onClearAllCompositions={handleClearAllCompositions}
         onRefreshCompositions={refreshCompositions}
+      />
+
+      <ClearModal
+        isOpen={isClearModalOpen}
+        onClose={() => setIsClearModalOpen(false)}
+        onConfirm={handleConfirmClear}
       />
     </>
   );
