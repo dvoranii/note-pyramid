@@ -41,6 +41,39 @@ export const usePyramidHandlers = (
       return true;
     }
 
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+      event.preventDefault();
+      clearFocus();
+
+      const levelOrder = ["base", "middle", "top"] as const;
+      const currentLevel = navigation.selectedLevel;
+
+      if (!currentLevel) {
+        navigation.setSelectedLevel("base");
+        navigation.showToast(
+          "Selected base level  - Press Enter to navigate notes"
+        );
+      } else {
+        const currentIndex = levelOrder.indexOf(currentLevel);
+        let newIndex: number;
+
+        if (event.key === "ArrowUp") {
+          newIndex = Math.min(currentIndex + 1, levelOrder.length - 1);
+        } else {
+          newIndex = Math.max(currentIndex - 1, 0);
+        }
+
+        if (newIndex !== currentIndex) {
+          const newLevel = levelOrder[newIndex];
+          navigation.setSelectedLevel(newLevel);
+          navigation.showToast(
+            `Selected ${newLevel} level - Press Enter to navigate notes`
+          );
+        }
+      }
+      return true;
+    }
+
     if (event.key === "Enter" && navigation.selectedLevel) {
       event.preventDefault();
       clearFocus();
@@ -74,17 +107,14 @@ export const usePyramidHandlers = (
     const highlightedIndices = navigation.highlightedPyramidNoteIndices;
     const highlightCount = highlightedIndices.length;
 
-    // NUMBER KEYS: Multi-selection toggle (1-9)
     if (event.key >= "1" && event.key <= "9") {
       event.preventDefault();
       clearFocus();
       const numberIndex = parseInt(event.key) - 1;
 
-      // Only process if this note exists
       if (numberIndex < levelNotes.length) {
         const isCurrentlyHighlighted = highlightedIndices.includes(numberIndex);
 
-        // Calculate what the new state WOULD be
         let predictedNewIndices: number[];
         if (isCurrentlyHighlighted) {
           predictedNewIndices = highlightedIndices.filter(
@@ -97,14 +127,11 @@ export const usePyramidHandlers = (
           );
         }
 
-        // Check if this would leave us with 0 notes
         if (predictedNewIndices.length === 0) {
-          // Exit level immediately
           navigation.setHighlightedPyramidNoteIndices([]);
           navigation.setPyramidMode("level-selection");
           navigation.showToast("Exited level - No notes selected");
         } else {
-          // Safe to toggle
           navigation.togglePyramidNoteHighlight(numberIndex);
           const action = isCurrentlyHighlighted ? "deselected" : "selected";
           navigation.showToast(
@@ -117,7 +144,6 @@ export const usePyramidHandlers = (
       }
     }
 
-    // ARROW KEYS: Single note navigation
     if (highlightCount === 1) {
       const currentIndex = highlightedIndices[0];
 
@@ -157,7 +183,6 @@ export const usePyramidHandlers = (
       return true;
     }
 
-    // SHIFT+D: Delete highlighted notes
     if (event.shiftKey && event.key === "D" && highlightCount > 0) {
       event.preventDefault();
       clearFocus();
@@ -193,7 +218,6 @@ export const usePyramidHandlers = (
       return true;
     }
 
-    // ESCAPE: Exit level navigation
     if (event.key === "Escape") {
       event.preventDefault();
       clearFocus();
