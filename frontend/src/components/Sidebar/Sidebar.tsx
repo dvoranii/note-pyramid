@@ -11,14 +11,71 @@ const Sidebar = () => {
   const [displayCount, setDisplayCount] = useState(12);
   const { sidebarMode, setSidebarMode } = useKeyboardNavigation();
 
+  const popularNoteNames = [
+    "Bergamot",
+    "Tonka Bean",
+    "Amber",
+    "Vanilla,",
+    "Patchouli",
+    "Oud",
+    "Lavender",
+    "Vetiver",
+    "Sandalwood",
+    "Rose",
+    "Jasime",
+    "Musk",
+    "Cedarwood",
+    "Neroli",
+    "Orange Blossom",
+    "Ylang Ylang",
+    "Cardamom",
+    "Pink Pepper",
+    "Black Pepper",
+    "Leather",
+    "Tobacco",
+    "Incense",
+    "Oakmoss",
+    "Grapefruit",
+    "Mandarin",
+    "Lemon",
+    "Black Currant",
+    "Fig",
+    "Orris Root",
+    "Saffron",
+    "Cinnamon",
+    "Lemon",
+    "Apple",
+    "Pineapple",
+    "Ambroxan",
+    "Iris",
+    "Blood Orange",
+    "Allspice",
+    "Cloves",
+    "Coconut",
+    "Cypress",
+    "Ginger",
+    "Mint",
+    "Coumarin",
+  ];
+
   const categories = useMemo(() => {
     return ["All", ...notesData.map((cat) => cat.category)];
   }, []);
 
   const allNotes = useMemo(() => {
-    return notesData.flatMap((cat) =>
+    const notes = notesData.flatMap((cat) =>
       cat.notes.map((note) => ({ ...note, category: cat.category }))
     );
+
+    return notes.sort((a, b) => {
+      const aIsPopular = popularNoteNames.includes(a.name);
+      const bIsPopular = popularNoteNames.includes(b.name);
+
+      if (aIsPopular && !bIsPopular) return -1;
+      if (!aIsPopular && bIsPopular) return 1;
+
+      return 0;
+    });
   }, []);
 
   const filteredNotes = useMemo(() => {
