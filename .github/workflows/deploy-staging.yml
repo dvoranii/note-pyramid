@@ -24,7 +24,7 @@ jobs:
                       su - newuser << 'EOF'
                       export PATH=$PATH:/usr/bin:/usr/local/bin:$HOME/.nvm/versions/node/v*/bin
 
-                      cd /var/www/common-scents/note-pyramid
+                      cd /var/www/common-scents/note-pyramid-staging
 
                       git checkout staging
                       git pull origin staging
