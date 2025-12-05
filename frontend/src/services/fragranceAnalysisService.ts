@@ -1,7 +1,7 @@
 import type { PyramidState, AnalysisResult } from "../types";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || `${import.meta.env.BASE_URL}api`;
+  import.meta.env.VITE_API_BASE_URL || `${import.meta.env.BASE_URL}/api`;
 
 export class FragranceAnalysisService {
   static async analyzeFragrance(
