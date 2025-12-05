@@ -1,0 +1,38 @@
+name: Deploy Note Pyramid to Staging
+
+on:
+    push:
+        branches:
+            - staging
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Deploy to Staging Server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.STAGING_HOST }}
+                  username: ${{ secrets.STAGING_USER }}
+                  key: ${{ secrets.STAGING_SSH_KEY }}
+                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
+                  script: |
+                      su - newuser << 'EOF'
+                      export PATH=$PATH:/usr/bin:/usr/local/bin:$HOME/.nvm/versions/node/v*/bin
+
+                      cd /var/www/common-scents/note-pyramid
+
+                      git checkout staging
+                      git pull origin staging
+
+                      npm run install:all
+
+                      npm run build
+
+                      cd backend
+                      pm2 restart ecosystem.config.cjs --update-env
+                      EOF
