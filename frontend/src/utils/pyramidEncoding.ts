@@ -26,5 +26,12 @@ export const decodeShareableAnalysis = (
 
 export const generateAnalysisShareUrl = (state: ShareableAnalysis): string => {
   const encoded = encodeShareableAnalysis(state);
-  return `${window.location.origin}/analysis?share=${encoded}`;
+
+  const basePath = import.meta.env.BASE_URL || "/";
+
+  const normalizedBase = basePath.endsWith("/")
+    ? basePath.slice(0, -1)
+    : basePath;
+
+  return `${window.location.origin}${normalizedBase}/analysis?share=${encoded}`;
 };

@@ -4,7 +4,6 @@ import { colors } from "../../theme/colors";
 export const LayoutContainer = styled.div`
   display: flex;
   height: 100vh;
-  /* background-color: ${colors.beige[100]}; */
   overflow: hidden;
 `;
 
@@ -17,7 +16,6 @@ export const MainContent = styled.main<{
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
   position: relative;
   background: radial-gradient(
     circle at center,

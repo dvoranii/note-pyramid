@@ -6,6 +6,8 @@ import { useLocation } from "react-router-dom";
 import { useKeyboardNavigation } from "../../context/KeyboardNavigationContext/useKeyboardNavigation";
 import { useState } from "react";
 import { HelpModal } from "../HelpModal/HelpModal";
+import { KeyboardNavIndicator } from "../KeyboardNavIndicator/KeyboardNavIndicator";
+
 interface LayoutProps {
   children: ReactNode;
 }
@@ -28,14 +30,18 @@ const Layout = ({ children }: LayoutProps) => {
         $isActive={isEnabled && activeContext === "pyramid" && !isAnalysisPage}
       >
         {children}
-        <S.HelpIconWrapper>
-          <S.HelpIcon onClick={() => setIsHelpModalOpen(true)}>?</S.HelpIcon>
-        </S.HelpIconWrapper>
+
+        {!isAnalysisPage && (
+          <S.HelpIconWrapper>
+            <S.HelpIcon onClick={() => setIsHelpModalOpen(true)}>?</S.HelpIcon>
+          </S.HelpIconWrapper>
+        )}
       </S.MainContent>
       <HelpModal
         isOpen={isHelpModalOpen}
         onClose={() => setIsHelpModalOpen(false)}
       />
+      {!isAnalysisPage && <KeyboardNavIndicator />}
     </S.LayoutContainer>
   );
 };

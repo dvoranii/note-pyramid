@@ -14,6 +14,7 @@ export const HeaderSection = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 100%;
+  padding: 1rem;
 `;
 
 export const Title = styled.h1`
