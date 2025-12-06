@@ -31,6 +31,12 @@ const Layout = ({ children }: LayoutProps) => {
       >
         {children}
 
+        <S.CommonScentsHomeWrapper>
+          <S.CommonScentsHomeLink href="https://common-scents.duckdns.org/">
+            ←Home
+          </S.CommonScentsHomeLink>
+        </S.CommonScentsHomeWrapper>
+
         {!isAnalysisPage && (
           <S.HelpIconWrapper>
             <S.HelpIcon onClick={() => setIsHelpModalOpen(true)}>?</S.HelpIcon>

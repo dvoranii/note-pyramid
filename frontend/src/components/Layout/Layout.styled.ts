@@ -56,7 +56,7 @@ export const SidebarWrapper = styled.div<{ $isActive?: boolean }>`
 export const HelpIconWrapper = styled.div`
   position: absolute;
   top: 12px;
-  left: 18px;
+  left: 85px;
 `;
 
 export const HelpIcon = styled.button`
@@ -74,5 +74,28 @@ export const HelpIcon = styled.button`
     cursor: pointer;
     background: ${colors.brown[900]};
     color: white;
+  }
+`;
+
+export const CommonScentsHomeWrapper = styled.div`
+  position: absolute;
+  top: 12px;
+  left: 8px;
+`;
+
+export const CommonScentsHomeLink = styled.a`
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: ${colors.brown[600]};
+  color: #ffffff;
+  font-size: 12px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 200ms ease;
+
+  &:hover {
+    cursor: pointer;
+    background: ${colors.brown[700]};
+    transform: translateY(-1px);
   }
 `;
