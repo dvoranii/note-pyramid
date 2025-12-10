@@ -6,7 +6,7 @@ import fragranceRoutes from "./routes/fragranceRoutes.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3006;
+const PORT = process.env.PORT;
 
 app.use(
   cors({
