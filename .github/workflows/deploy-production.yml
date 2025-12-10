@@ -1,0 +1,39 @@
+name: Deploy Note Pyramid to Production
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Deploy to Production Server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.PRODUCTION_HOST }}
+                  username: ${{ secrets.PRODUCTION_USER }}
+                  key: ${{ secrets.PRODUCTION_SSH_KEY }}
+                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
+                  script: |
+                      su - newuser << 'EOF'
+                      export PATH=$PATH:/usr/bin:/usr/local/bin:$HOME/.nvm/versions/node/v*/bin
+
+                      cd /var/www/common-scents/note-pyramid-prod
+
+                      git checkout main
+                      git pull origin main
+
+                      npm run install:all
+
+                      npm run build
+
+                      cd backend
+                      pm2 restart ecosystem.config.cjs --update-env
+                      pm2 save
+                      EOF
