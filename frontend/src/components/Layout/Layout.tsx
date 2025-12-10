@@ -34,7 +34,7 @@ const Layout = ({ children }: LayoutProps) => {
         {!isAnalysisPage && (
           <>
             <S.CommonScentsHomeWrapper>
-              <S.CommonScentsHomeLink href="https://common-scents.duckdns.org/">
+              <S.CommonScentsHomeLink href={import.meta.env.VITE_API_URL}>
                 ←Home
               </S.CommonScentsHomeLink>
             </S.CommonScentsHomeWrapper>
